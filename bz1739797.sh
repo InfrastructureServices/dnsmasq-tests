@@ -20,6 +20,12 @@ sleep $TIMEOUT
 echo terminating
 kill $(cat /tmp/dhcp_$BRDEV.pid)
 
-journalctl -exn $LINES -t 'dnsmasq' -t 'dnsmasq-dhcp' --no-pager
+COUNT=$(journalctl -exn $LINES -t 'dnsmasq' -t 'dnsmasq-dhcp' --no-pager | grep "RTR-ADVERT($BRDEV)" | wc -l)
 
-cleanup
+clean
+
+if [ "$COUNT" -gt 2 ]; then
+    echo "FAIL: Found $COUNT lines, dnsmasq is broken!"
+    exit 1
+fi
+

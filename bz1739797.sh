@@ -7,6 +7,7 @@
 
 TIMEOUT=${1:-30}
 MAXLINES=100
+GOODLINES=10
 
 CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
@@ -29,7 +30,7 @@ COUNT=$(journalctl -exn $MAXLINES -t 'dnsmasq' -t 'dnsmasq-dhcp' -S "$START" --n
 
 clean
 
-if [ "$COUNT" -gt 5 ]; then
+if [ "$COUNT" -gt "$GOODLINES" ]; then
     echo "FAIL: $COUNT RTR-ADVERT lines, dnsmasq seems broken!"
     exit 1
 else

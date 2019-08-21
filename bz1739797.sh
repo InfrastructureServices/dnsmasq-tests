@@ -10,6 +10,7 @@ CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
 source $CODEDIR/setup.sh
 
+START=$(date -Iminutes | tr T ' ')
 echo starting
 # Run joint DHCP4/DHCP6 server with router advertisement enabled in veth namespace
 $IN_NS dnsmasq --pid-file=/tmp/dhcp_$BRDEV.pid --dhcp-leasefile=/tmp/dhcp_$BRDEV.lease --dhcp-range=${IPV4_PREFIX}.10,${IPV4_PREFIX}.254,240 --dhcp-range=${IPV6_PREFIX}::10,${IPV6_PREFIX}::1ff,slaac,64,240 --enable-ra --interface=$BRDEV --bind-interfaces
@@ -20,12 +21,12 @@ sleep $TIMEOUT
 echo terminating
 kill $(cat /tmp/dhcp_$BRDEV.pid)
 
-COUNT=$(journalctl -exn $LINES -t 'dnsmasq' -t 'dnsmasq-dhcp' --no-pager | grep "RTR-ADVERT($BRDEV)" | wc -l)
+COUNT=$(journalctl -exn $LINES -t 'dnsmasq' -t 'dnsmasq-dhcp' -S "$START" --no-pager | grep "RTR-ADVERT($BRDEV)" | wc -l)
 
 clean
 
-if [ "$COUNT" -gt 2 ]; then
-    echo "FAIL: Found $COUNT lines, dnsmasq is broken!"
+if [ "$COUNT" -gt 5 ]; then
+    echo "FAIL: Found $COUNT RTR-ADVERT lines, dnsmasq seems broken!"
     exit 1
 fi
 

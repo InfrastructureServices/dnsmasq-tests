@@ -26,7 +26,9 @@ COUNT=$(journalctl -exn $MAXLINES -t 'dnsmasq' -t 'dnsmasq-dhcp' -S "$START" --n
 clean
 
 if [ "$COUNT" -gt 5 ]; then
-    echo "FAIL: Found $COUNT RTR-ADVERT lines, dnsmasq seems broken!"
+    echo "FAIL: $COUNT RTR-ADVERT lines, dnsmasq seems broken!"
     exit 1
+else
+    echo "PASS: $COUNT RTR-ADVERT lines"
 fi
 

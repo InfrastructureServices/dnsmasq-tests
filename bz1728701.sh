@@ -1,7 +1,7 @@
 #!/bin/sh
 # vim: sts=4:
 #
-# Reproducer for https://bugzilla.redhat.com/show_bug.cgi?id=1739797
+# Reproducer for https://bugzilla.redhat.com/show_bug.cgi?id=1728701
 #
 # TODO: use bats!
 

@@ -39,11 +39,11 @@ bridge_populate()
 
 clean()
 {
-    ip netns delete $NS
     for IF in $BR_INTERFACES
     do
         ip link del dev ${IF}0 type veth
     done
+    ip netns delete $NS
 }
 
 setup()

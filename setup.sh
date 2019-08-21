@@ -1,13 +1,20 @@
 #!/bin/sh
-#
+# 
+# vim: set sts=4:
 # Helper tools for dnsmasq testing
 
 NS=vethsetup
-IN_NS="ip netns exec $NS"
 
 BRDEV=simbr
 IPV4_PREFIX=10.16.1
 IPV6_PREFIX=2620:52:0:1086
+
+# local settings
+IN_NS="ip netns exec $NS"
+CODEDIR="`(dirname -- "$0")`"
+
+# override if configuration is found
+[ -r $CODEDIR/settings.conf ] && . $CODEDIR/settings.conf
 
 bridge_create()
 {
@@ -23,8 +30,8 @@ interface_create()
     for IF in vetha vethb
     do
         ip link add ${IF}0 type veth peer name ${IF}1
-	ip link ${IF}1 set netns $NS
-        ip link ${IF}0 set up
+	ip link set dev ${IF}1 netns $NS
+        ip link set dev ${IF}0 up
     done
 }
 
@@ -33,18 +40,22 @@ bridge_populate()
     # Add eth10 peer into the $BRDEV
     for IF in vetha vethb
     do
-	$IN_NS ip link set ${IF}1 master $BRDEV
+	$IN_NS ip link set dev ${IF}1 up master $BRDEV
     done
+}
+
+clean()
+{
+    ip netns delete $NS
 }
 
 setup()
 {
+    clean > /dev/null
+    ip netns add $NS
     bridge_create
     interface_create
     bridge_populate
 }
 
 setup
-
-# Run joint DHCP4/DHCP6 server with router advertisement enabled in veth namespace
-$IN_NS dnsmasq --pid-file=/tmp/dhcp_$BRDEV.pid --dhcp-leasefile=/tmp/dhcp_$BRDEV.lease --dhcp-range=${IPV4_PREFIX}.10,${IPV4_PREFIX}.254,240 --dhcp-range=${IPV6_PREFIX}::10,${IPV6_PREFIX}::1ff,slaac,64,240 --enable-ra --interface=$BRDEV --bind-interfaces

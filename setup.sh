@@ -48,7 +48,7 @@ clean()
 
 setup()
 {
-    clean > /dev/null
+    clean 2>&1 >/dev/null
     ip netns add $NS
     bridge_create
     interface_create

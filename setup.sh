@@ -3,18 +3,11 @@
 # vim: set sts=4:
 # Helper tools for dnsmasq testing
 
-NS=vethsetup
-
-BRDEV=simbr
-IPV4_PREFIX=10.16.1
-IPV6_PREFIX=2620:52:0:1086
-
 # local settings
 IN_NS="ip netns exec $NS"
 CODEDIR="`(dirname -- "$0")`"
 
-# override if configuration is found
-[ -r $CODEDIR/settings.conf ] && . $CODEDIR/settings.conf
+. $CODEDIR/settings.conf
 
 bridge_create()
 {
@@ -27,7 +20,7 @@ bridge_create()
 
 interface_create()
 {
-    for IF in vetha vethb
+    for IF in $BR_INTERFACES
     do
         ip link add ${IF}0 type veth peer name ${IF}1
 	ip link set dev ${IF}1 netns $NS
@@ -38,7 +31,7 @@ interface_create()
 bridge_populate()
 {
     # Add eth10 peer into the $BRDEV
-    for IF in vetha vethb
+    for IF in $BR_INTERFACES
     do
 	$IN_NS ip link set dev ${IF}1 up master $BRDEV
     done
@@ -47,7 +40,7 @@ bridge_populate()
 clean()
 {
     ip netns delete $NS
-    for IF in vetha vethb
+    for IF in $BR_INTERFACES
     do
         ip link del dev ${IF}0 type veth
     done

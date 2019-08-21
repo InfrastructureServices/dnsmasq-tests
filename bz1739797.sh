@@ -4,6 +4,7 @@
 # Reproducer for https://bugzilla.redhat.com/show_bug.cgi?id=1739797
 
 TIMEOUT=${1:-30}
+LINES=100
 
 CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
@@ -19,4 +20,4 @@ sleep $TIMEOUT
 echo terminating
 kill $(cat /tmp/dhcp_$BRDEV.pid)
 
-journalctl -xe
+journalctl -exn $LINES -t 'dnsmasq' -t 'dnsmasq-dhcp' --no-pager

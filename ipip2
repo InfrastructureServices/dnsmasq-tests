@@ -1,0 +1,24 @@
+#!/bin/sh
+
+LOCAL=2
+PEER=17
+
+DEV=ipip1
+# Real network to remote
+NET_PREFIX=192.168.122
+# Configured network on new interface
+LOCAL_PREFIX=10.129.1
+
+LOCAL_END=$NET_PREFIX.$LOCAL
+PEER_END=$NET_PREFIX.$PEER
+LOCAL_IP=$LOCAL_PREFIX.$LOCAL
+PEER_IP=$LOCAL_PREFIX.$PEER
+
+
+if [ "$1" = down ]; then
+	ip link delete $DEV
+else
+	ip link add $DEV type ipip remote $PEER_END local $LOCAL_END
+	ip address add $LOCAL_IP peer $PEER_IP dev $DEV
+	ip link set $DEV up
+fi

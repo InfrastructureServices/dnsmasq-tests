@@ -2,6 +2,8 @@
 # vim: sts=4:
 #
 # Reproducer for https://bugzilla.redhat.com/show_bug.cgi?id=1739797
+#
+# TODO: use bats!
 
 TIMEOUT=${1:-30}
 MAXLINES=100
@@ -9,6 +11,8 @@ MAXLINES=100
 CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
 source $CODEDIR/setup.sh
+
+setup
 
 START=$(date '+%Y-%m-%d %H:%M:%S')
 echo starting

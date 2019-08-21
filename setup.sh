@@ -55,4 +55,8 @@ setup()
     bridge_populate
 }
 
-setup
+case "$1" in
+    start|init)   setup;;
+    clean|stop)   clean;;
+    *) ;;
+esac

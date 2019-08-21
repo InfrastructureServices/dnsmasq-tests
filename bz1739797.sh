@@ -21,3 +21,5 @@ echo terminating
 kill $(cat /tmp/dhcp_$BRDEV.pid)
 
 journalctl -exn $LINES -t 'dnsmasq' -t 'dnsmasq-dhcp' --no-pager
+
+cleanup

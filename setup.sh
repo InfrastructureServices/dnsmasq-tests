@@ -50,6 +50,7 @@ setup()
 {
     clean >/dev/null 2>&1 
     ip netns add $NS
+    $IN_NS ip link set lo up
     bridge_create
     interface_create
     bridge_populate

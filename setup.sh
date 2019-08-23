@@ -18,6 +18,7 @@ bridge_create()
     $IN_NS ip -6 addr add ${IPV6_PREFIX}::1/64 dev $BRDEV
 }
 
+# create veth interfaces
 interface_create()
 {
     for IF in $BR_INTERFACES
@@ -30,30 +31,66 @@ interface_create()
 
 bridge_populate()
 {
-    # Add eth10 peer into the $BRDEV
     for IF in $BR_INTERFACES
     do
 	$IN_NS ip link set dev ${IF}1 up master $BRDEV
     done
 }
 
-clean()
+bridge_destroy()
+{
+    $IN_NS ip link del dev $BRDEV
+}
+
+# Create all network devices and set their addresses
+interfaces_create()
+{
+    bridge_create
+    interface_create
+    bridge_populate
+}
+
+interfaces_destroy()
 {
     for IF in $BR_INTERFACES
     do
         ip link del dev ${IF}0 type veth
     done
+    bridge_destroy
+}
+
+netns_create()
+{
+    ip netns add $NS
+}
+
+netns_destroy()
+{
     ip netns delete $NS
+}
+
+dnsmasq_start()
+{
+    $IN_NS $DNSMASQ --pid-file=/tmp/dnsmasq-$NS-$BRDEV.pid --dhcp-leasefile=/tmp/dnsmasq-$NS-$BRDEV.lease "$@"
+}
+
+dnsmasq_stop()
+{
+    kill $(cat /tmp/dnsmasq-$NS-$BRDEV.pid)
+}
+
+clean()
+{
+    interfaces_destroy
+    netns_destroy
 }
 
 setup()
 {
-    clean >/dev/null 2>&1 
-    ip netns add $NS
+    clean >/dev/null 2>&1 || :
+    netns_create
     $IN_NS ip link set lo up
-    bridge_create
-    interface_create
-    bridge_populate
+    interfaces_create
 }
 
 case "$1" in

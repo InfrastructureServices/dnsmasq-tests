@@ -23,8 +23,8 @@ $IN_NS $DNSMASQ --pid-file=/tmp/dns_$BRDEV.pid --dhcp-leasefile=/tmp/dns_$BRDEV.
 sleep $TIMEOUT
 $IN_NS dig +tcp @${IPV4_PREFIX}.1 localhost
 
-clean
-setup
+interfaces_destroy
+interfaces_create
 
 echo recreated interfaces
 $IN_NS dig +tcp @${IPV4_PREFIX}.1 localhost

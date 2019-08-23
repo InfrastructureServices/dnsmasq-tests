@@ -19,7 +19,7 @@ setup
 
 START=$(date '+%Y-%m-%d %H:%M:%S')
 echo starting
-$IN_NS $DNSMASQ --pid-file=/tmp/dns_$BRDEV.pid --dhcp-leasefile=/tmp/dns_$BRDEV.lease --no-resolv --interface=$BRDEV --interface=lo --bind-dynamic
+dnsmasq_start --no-resolv --interface=$BRDEV --interface=lo --bind-dynamic
 sleep $TIMEOUT
 $IN_NS dig +tcp @${IPV4_PREFIX}.1 localhost
 
@@ -32,7 +32,7 @@ R=$?
 sleep $TIMEOUT
 
 echo terminating
-kill $(cat /tmp/dns_$BRDEV.pid)
+dnsmasq_stop
 
 clean
 

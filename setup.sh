@@ -77,6 +77,7 @@ dnsmasq_start()
 dnsmasq_stop()
 {
     kill $(cat /tmp/dnsmasq-$NS-$BRDEV.pid)
+    rm -f /tmp/dnsmasq-$NS-$BRDEV.pid
 }
 
 clean()

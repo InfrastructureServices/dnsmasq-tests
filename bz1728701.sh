@@ -11,8 +11,9 @@ CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
 source $CODEDIR/setup.sh
 
-if ! dig -v; then
+if ! ./dig.sh -v; then
     echo "FAIL: dig not found!"
+    exit 1
 fi
 
 setup
@@ -21,13 +22,16 @@ START=$(date '+%Y-%m-%d %H:%M:%S')
 echo starting
 dnsmasq_start --no-resolv --interface=$BRDEV --interface=lo --bind-dynamic
 sleep $TIMEOUT
-$IN_NS dig +tcp @${IPV4_PREFIX}.1 localhost
+$IN_NS ./dig.sh --status=NOERROR +tcp @${IPV4_PREFIX}.1 localhost
+
+$IN_NS ip link show dev $BRDEV
 
 interfaces_destroy
 interfaces_create
 
 echo recreated interfaces
-$IN_NS dig +tcp @${IPV4_PREFIX}.1 localhost
+$IN_NS ip link show dev $BRDEV
+$IN_NS ./dig.sh --status=NOERROR +tcp @${IPV4_PREFIX}.1 localhost
 R=$?
 sleep $TIMEOUT
 

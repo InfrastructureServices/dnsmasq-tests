@@ -2,3 +2,4 @@ syntax(2)
 test_suite('dnsmasq')
 
 tap_test_program{name='dns-non-recursive-query.bats'}
+tap_test_program{name='bz1728701.bats'}

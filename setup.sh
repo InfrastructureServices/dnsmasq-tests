@@ -71,7 +71,7 @@ netns_destroy()
 
 dnsmasq_start()
 {
-    $IN_NS $DNSMASQ --pid-file=/tmp/dnsmasq-$NS-$BRDEV.pid --dhcp-leasefile=/tmp/dnsmasq-$NS-$BRDEV.lease "$@"
+    $IN_NS $DNSMASQ --conf-file=/dev/null --pid-file=/tmp/dnsmasq-$NS-$BRDEV.pid --dhcp-leasefile=/tmp/dnsmasq-$NS-$BRDEV.lease "$@"
 }
 
 dnsmasq_stop()

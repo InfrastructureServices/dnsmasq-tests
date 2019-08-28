@@ -99,7 +99,7 @@ setup_ns()
 }
 
 case "$1" in
-    start|init)   setup;;
-    clean|stop)   clean;;
+    start|init)   setup_ns;;
+    clean|stop)   clean_ns;;
     *) ;;
 esac

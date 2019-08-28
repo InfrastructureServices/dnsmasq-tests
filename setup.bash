@@ -5,7 +5,11 @@
 
 # local settings
 IN_NS="ip netns exec $NS"
-CODEDIR="`(dirname -- "$0")`"
+if [ -n "$BATS_TEST_DIRNAME" ]; then
+    CODEDIR="$BATS_TEST_DIRNAME"
+else
+    CODEDIR="`(dirname -- "$0")`"
+fi
 
 . $CODEDIR/settings.conf
 
@@ -80,13 +84,13 @@ dnsmasq_stop()
     rm -f /tmp/dnsmasq-$NS-$BRDEV.pid
 }
 
-clean()
+clean_ns()
 {
     interfaces_destroy
     netns_destroy
 }
 
-setup()
+setup_ns()
 {
     clean >/dev/null 2>&1 || :
     netns_create

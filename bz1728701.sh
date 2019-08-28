@@ -9,14 +9,14 @@ TIMEOUT=${1:-0.1}
 
 CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
-source $CODEDIR/setup.sh
+source $CODEDIR/setup.bash
 
 if ! ./dig.sh -v; then
     echo "FAIL: dig not found!"
     exit 1
 fi
 
-setup
+setup_ns
 
 START=$(date '+%Y-%m-%d %H:%M:%S')
 echo starting
@@ -38,7 +38,7 @@ sleep $TIMEOUT
 echo terminating
 dnsmasq_stop
 
-clean
+clean_ns
 
 if [ "$R" -ne 0 ]; then
     echo "FAIL: no response after recreation!"

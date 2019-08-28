@@ -11,9 +11,9 @@ GOODLINES=10
 
 CODEDIR="`(dirname -- "$0")`"
 source $CODEDIR/settings.conf
-source $CODEDIR/setup.sh
+source $CODEDIR/setup.bash
 
-setup
+setup_ns
 
 START=$(date '+%Y-%m-%d %H:%M:%S')
 echo starting
@@ -28,7 +28,7 @@ dnsmasq_stop
 
 COUNT=$(journalctl -exn $MAXLINES -t 'dnsmasq' -t 'dnsmasq-dhcp' -S "$START" --no-pager | grep "RTR-ADVERT($BRDEV)" | wc -l)
 
-clean
+clean_ns
 
 if [ "$COUNT" -gt "$GOODLINES" ]; then
     echo "FAIL: $COUNT RTR-ADVERT lines, dnsmasq seems broken!"

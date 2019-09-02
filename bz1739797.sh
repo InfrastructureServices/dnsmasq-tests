@@ -5,7 +5,7 @@
 #
 # TODO: use bats!
 
-TIMEOUT=${1:-30}
+TIMEOUT=${1:-20}
 MAXLINES=100
 GOODLINES=10
 
@@ -17,11 +17,14 @@ setup_ns
 
 START=$(date '+%Y-%m-%d %H:%M:%S')
 echo starting
+$IN_NS ip a show dev $BRDEV
 # Run joint DHCP4/DHCP6 server with router advertisement enabled in veth namespace
 dnsmasq_start --interface=$BRDEV --bind-interfaces --dhcp-range=${IPV4_PREFIX}.10,${IPV4_PREFIX}.254,240 --dhcp-range=${IPV6_PREFIX}::10,${IPV6_PREFIX}::1ff,slaac,64,240 --enable-ra
 
+$IN_NS ip -6 address show dev $BRDEV
+
 echo waiting
-sleep $TIMEOUT
+timeout $TIMEOUT $IN_NS ip monitor | while read LINE; do echo "`date '+%02H:%02M:%02S.%3N'`> $LINE"; done
 
 echo terminating
 dnsmasq_stop

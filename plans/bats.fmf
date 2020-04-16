@@ -1,0 +1,10 @@
+# vim: ts=4 expandtab
+summary: Run tests using bats
+discover:
+    how: fmf
+    filter: tag:bats
+provision:
+    how: local
+execute:
+    how: shell
+    script: bats -r

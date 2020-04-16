@@ -1,0 +1,26 @@
+# vim: sts=4 expandtab
+summary: DNS tests
+duration: 5m
+tag:
+- bats
+- dns
+
+/non-recursive-query.bats:
+    summary: test nonrecursive queries
+    description: |
+        Checks local names are answered even without recursion desired bit
+    test: bats non-recursive-query.bats
+
+/records.bats:
+    summary: check basic dns records
+    test: bats records.bats
+
+/bz1728701.bats:
+    summary: Ensure interface responds after recreation
+    test: bats bz1728701.sh
+
+/bz1739797.bats:
+    summary: Check it does not flood with router advertisements
+    description: |
+        Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1739797
+    test: bats bz1739797.bats

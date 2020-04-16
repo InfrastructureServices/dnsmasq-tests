@@ -10,7 +10,7 @@ require:
 - dnsmasq
 duration: 10m
 enabled: true
-tag:
+tag+:
 - NoRHEL5
 - TIPfail_fedora
 - TIPfail_infra

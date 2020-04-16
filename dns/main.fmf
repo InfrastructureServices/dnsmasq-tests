@@ -1,7 +1,7 @@
 # vim: sts=4 expandtab
 summary: DNS tests
 duration: 5m
-tag:
+tag+:
 - bats
 - dns
 

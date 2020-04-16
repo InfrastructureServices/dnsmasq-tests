@@ -12,7 +12,7 @@ require:
 - library(initscripts/basic)
 duration: 10m
 enabled: true
-tag:
+tag+:
 - NoRHEL4
 - NoRHEL5
 - TIP_fedora_fail

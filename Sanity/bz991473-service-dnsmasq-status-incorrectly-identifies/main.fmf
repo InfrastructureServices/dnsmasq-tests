@@ -14,7 +14,7 @@ require:
 - library(initscripts/basic)
 duration: 10m
 enabled: true
-tag:
+tag+:
 - TIPfail tipx
 - TIPfail_infra
 - TIPpass

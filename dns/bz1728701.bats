@@ -4,7 +4,7 @@
 # Reproducer for https://bugzilla.redhat.com/show_bug.cgi?id=1728701
 #
 
-load setup
+load dns
 
 TIMEOUT=${1:-0.1}
 

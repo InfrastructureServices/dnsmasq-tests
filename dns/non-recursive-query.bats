@@ -5,7 +5,7 @@
 #
 # TODO: use bats!
 
-load setup
+load dns
 
 @test "dig present" {
 $CODEDIR/dig.sh -v

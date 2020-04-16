@@ -5,10 +5,13 @@
 
 # local settings
 IN_NS="ip netns exec $NS"
-if [ -n "$BATS_TEST_DIRNAME" ]; then
-    CODEDIR="$BATS_TEST_DIRNAME"
-else
-    CODEDIR="`(dirname -- "$0")`"
+
+if [ -z "$CODEDIR" ]; then
+    if [ -n "$BATS_TEST_DIRNAME" ]; then
+	CODEDIR="$BATS_TEST_DIRNAME"
+    else
+	CODEDIR="`(dirname -- "$0")`"
+    fi
 fi
 
 . $CODEDIR/settings.conf

@@ -1,0 +1,3 @@
+PURPOSE of /CoreOS/dnsmasq/Sanity/Basic-dns-resolver-test
+Description: Basic test for the dnsmasq dns resolver
+Author: Daniel Rusek <drusek@redhat.com>

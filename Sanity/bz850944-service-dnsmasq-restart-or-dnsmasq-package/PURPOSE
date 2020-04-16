@@ -1,0 +1,5 @@
+PURPOSE of /CoreOS/dnsmasq/Sanity/bz850944-service-dnsmasq-restart-or-dnsmasq-package
+Description: Test for BZ#850944 ("service dnsmasq restart (or dnsmasq package)
+Author: Jan Scotka <jscotka@redhat.com>
+Bug summary: "service dnsmasq restart (or dnsmasq package update) kills all instances of dnsmasq on system, including those started by libvirtd
+Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=850944

@@ -1,0 +1,23 @@
+summary: test if release sanity is there
+description: ''
+contact: Patrik Moško <pmosko@redhat.com>
+component:
+- dnsmasq
+test: ./runtest.sh
+require:
+- dnsmasq
+- dnsmasq-utils
+- library(initscripts/basic)
+duration: 10m
+enabled: true
+tag:
+- NoRHEL4
+- NoRHEL5
+- TIPfail_infra
+- Tier1
+tier: '1'
+relevancy: |
+    distro < rhel-7.4: False
+extra-summary: /CoreOS/dnsmasq/Sanity/bz1375569-added-dhcp_release6-binary
+extra-task: /CoreOS/dnsmasq/Sanity/bz1375569-added-dhcp_release6-binary
+extra-nitrate: TC#0553930

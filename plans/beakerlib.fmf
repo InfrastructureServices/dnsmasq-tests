@@ -1,0 +1,11 @@
+# vim: ts=4 expandtab
+summary: beakerlib plan
+discover:
+    how: fmf
+execute:
+    how: beakerlib
+
+/tier1:
+    summary: Tier1 tests
+    discover+:
+        filter: tier:1

@@ -1,0 +1,27 @@
+summary: Test for BZ#991473 ('service dnsmasq status' incorrectly identifies)
+description: |
+    Bug summary: 'service dnsmasq status' incorrectly identifies the libvirt dnsmasq process.
+    Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=991473
+contact: Patrik Moško <pmosko@redhat.com>
+component:
+- dnsmasq
+test: ./runtest.sh
+require:
+- dnsmasq-utils
+- dnsmasq
+- psmisc
+- bridge-utils
+- library(initscripts/basic)
+duration: 10m
+enabled: true
+tag:
+- TIPfail tipx
+- TIPfail_infra
+- TIPpass
+- no-EWA
+relevancy: |
+    distro <= rhel-6: False
+    distro < rhel-6.5: False
+extra-summary: /CoreOS/dnsmasq/Sanity/bz991473-service-dnsmasq-status-incorrectly-identifies
+extra-task: /CoreOS/dnsmasq/Sanity/bz991473-service-dnsmasq-status-incorrectly-identifies
+extra-nitrate: TC#0384732

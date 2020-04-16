@@ -1,0 +1,6 @@
+192.168.0.1		gateway.lan.test
+192.168.0.2		server.lan.test
+fd1d:b670:1cc:8897::1	ipv6-only.lan.test
+192.168.0.3		ipv4-only.lan.test
+fd1d:b670:1cc:8897::4	both.lan.test
+192.168.0.4		both.lan.test

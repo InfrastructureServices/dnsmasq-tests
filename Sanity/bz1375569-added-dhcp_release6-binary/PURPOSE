@@ -1,0 +1,3 @@
+PURPOSE of /CoreOS/dnsmasq/Sanity/bz1375569-added-dhcp_release6-binary
+Description: test if release sanity is there
+Author: Jan Scotka <jscotka@redhat.com>

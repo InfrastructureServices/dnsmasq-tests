@@ -1,0 +1,3 @@
+PURPOSE of /CoreOS/dnsmasq/Sanity/dhcp-smoke-test
+Description: checks the very basic functionality of the DHCP daemon
+Author: Ales Zelinka <azelinka@redhat.com>

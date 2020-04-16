@@ -1,0 +1,5 @@
+PURPOSE of /CoreOS/dnsmasq/Sanity/bz991473-service-dnsmasq-status-incorrectly-identifies
+Description: Test for BZ#991473 ('service dnsmasq status' incorrectly identifies)
+Author: Jan Scotka <jscotka@redhat.com>
+Bug summary: 'service dnsmasq status' incorrectly identifies the libvirt dnsmasq process.
+Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=991473

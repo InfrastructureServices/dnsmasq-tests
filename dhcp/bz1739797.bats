@@ -8,7 +8,7 @@ TIMEOUT=${1:-20}
 MAXLINES=100
 GOODLINES=10
 
-load dns
+load dhcp
 
 @test "dig present" {
 $CODEDIR/dig.sh -v

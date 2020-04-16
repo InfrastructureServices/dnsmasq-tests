@@ -2,3 +2,4 @@ syntax(2)
 test_suite('dnsmasq')
 
 include('dns/Kyuafile')
+include('dhcp/Kyuafile')

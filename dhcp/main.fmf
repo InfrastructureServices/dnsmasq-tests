@@ -1,0 +1,12 @@
+# vim: sts=4 expandtab
+summary: DHCP tests
+duration: 5m
+tag:
+- bats
+- dhcp
+
+/bz1739797.bats:
+    summary: Check it does not flood with router advertisements
+    description: |
+        Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1739797
+    test: bats bz1739797.bats

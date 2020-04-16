@@ -18,9 +18,3 @@ tag:
 /bz1728701.bats:
     summary: Ensure interface responds after recreation
     test: bats bz1728701.sh
-
-/bz1739797.bats:
-    summary: Check it does not flood with router advertisements
-    description: |
-        Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1739797
-    test: bats bz1739797.bats

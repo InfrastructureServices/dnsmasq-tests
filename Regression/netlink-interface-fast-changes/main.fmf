@@ -1,0 +1,18 @@
+summary: Test for BZ#1887649 (dnsmasq stops replying to upstream queries)
+description: |
+    Bug summary: dnsmasq stops replying to upstream queries
+    Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1887649
+contact:
+- Petr Mensik <pemensik@redhat.com>
+component:
+- dnsmasq
+test: ./runtest.sh
+framework: beakerlib
+recommend:
+- dnsmasq
+- lsof
+- bind-utils
+- net-tools
+duration: 5m
+extra-summary: /CoreOS/dnsmasq/Regression/netlink-interface-fast-changes
+extra-task: /CoreOS/dnsmasq/Regression/netlink-interface-fast-changes

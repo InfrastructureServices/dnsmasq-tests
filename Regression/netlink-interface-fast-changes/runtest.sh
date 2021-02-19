@@ -30,7 +30,8 @@
 
 PACKAGE="dnsmasq"
 : ${REPEATS:=10}
-: ${SUBMIT_STRACE:=n}
+: ${STRACE_LOG:=n}
+: ${STRACE_PARAMS:=-r}
 : ${DEBUG:=n}
 
 count_listeners() {
@@ -84,7 +85,7 @@ rlJournalStart
 	rlServiceStart dnsmasq
 	sleep 2
 	rlRun "DNSMASQ_PID=$(pidof dnsmasq)"
-	rlRun "strace -p $DNSMASQ_PID -o dnsmasq.strace &"
+	rlRun "strace -p $DNSMASQ_PID -o dnsmasq.strace $STRACE_PARAMS &"
 	STRACE_PID=$!
 	rlRun "$TestDir/netlink_stats.sh $DNSMASQ_PID > netlink.log &"
 	NETLINK_PID=$!
@@ -101,6 +102,7 @@ rlJournalStart
 	sleep 4
 	rlLog "Listeners UDP: $(count_listeners UDP) TCP: $(count_listeners TCP)"
 	sleep 4
+	rlRun "lsof -n -p $DNSMASQ_PID | tee dnsmasq.sockets" 0 "List remaining dnsmasq listeners"
 	LISTENERS_UDP=$(count_listeners UDP)
 	LISTENERS_TCP=$(count_listeners TCP)
 	rlAssertLesser "Check number of UDP listeners" $LISTENERS_UDP 5
@@ -109,14 +111,19 @@ rlJournalStart
 	rlRun "kill $STRACE_PID $NETLINK_PID"
 	rlRun "wait $STRACE_PID $NETLINK_PID" 0-255
 	rlRun "COUNT_ENOBUFS=$(grep -w ENOBUFS dnsmasq.strace | wc -l)"
+	rlRun "COUNT_EADDRNOTAVAIL=$(grep -w EADDRNOTAVAIL dnsmasq.strace | wc -l)"
+	rlRun "COUNT_RTM_GETADDR=$(grep -w RTM_GETADDR dnsmasq.strace | wc -l)"
 	rlRun "awk '$DNSMASQ_PID == \$3 || \$3 == \"Pid\" { print }' /proc/net/netlink" 0-255 "Show netlink info on process"
 	[ "$DEBUG" = y ] && PS1="test-debug $PS1" bash -i
     rlPhaseEnd
 
     rlPhaseStartCleanup
-	rlRun "gzip dnsmasq.strace"
-	# It can be 40M big even after compression. Omit unless requested
-	[ "$SUBMIT_STRACE" = y ] && rlFileSubmit dnsmasq.strace*
+	if [ "$STRACE_LOG" = y ]; then
+		# It can be 40M big even after compression. Omit unless requested
+		rlRun "gzip dnsmasq.strace"
+		rlFileSubmit dnsmasq.strace*
+	fi
+	rlFileSubmit dnsmasq.sockets
 	rlFileSubmit netlink.log
 	rlFileSubmit /var/log/dnsmasq/test.log
         rlRun "popd"

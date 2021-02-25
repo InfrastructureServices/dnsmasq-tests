@@ -32,7 +32,9 @@ PACKAGE="dnsmasq"
 : ${REPEATS:=10}
 : ${STRACE_LOG:=n}
 : ${STRACE_PARAMS:=-r}
+: ${FAIL_WAIT:=10}
 : ${DEBUG:=n}
+: ${DEBUG_FAIL:=n}
 
 count_listeners() {
 	local FILTER=${1:-UDP}
@@ -63,7 +65,7 @@ loop_interfaces() {
 
 rlJournalStart
   for REPEAT in $(seq 1 $REPEATS); do
-    rlPhaseStartSetup
+    rlPhaseStartSetup "Setup #$REPEAT"
         rlAssertRpm $PACKAGE
         rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
 	rlRun "TestDir=\$(pwd)"
@@ -92,16 +94,15 @@ rlJournalStart
 	rlRun "ps u $STRACE_PID $DNSMASQ_PID $NETLINK_PID || rlDie 'Some process not running'"
     rlPhaseEnd
 
-    rlPhaseStartTest
+    rlPhaseStartTest "Test #$REPEAT"
 	rlLog "Listeners UDP: $(count_listeners UDP) TCP: $(count_listeners TCP)"
 	rlRun "loop_interfaces"
-	rlLog "Listeners UDP: $(count_listeners UDP) TCP: $(count_listeners TCP)"
 	# give it time to release them again
-	sleep 1
-	rlLog "Listeners UDP: $(count_listeners UDP) TCP: $(count_listeners TCP)"
-	sleep 4
-	rlLog "Listeners UDP: $(count_listeners UDP) TCP: $(count_listeners TCP)"
-	sleep 4
+	for LREP in $(seq 1 $FAIL_WAIT)
+	do
+		rlLog "Listeners UDP: $(count_listeners UDP) TCP: $(count_listeners TCP)"
+		sleep 2
+	done
 	rlRun "lsof -n -p $DNSMASQ_PID | tee dnsmasq.sockets" 0 "List remaining dnsmasq listeners"
 	LISTENERS_UDP=$(count_listeners UDP)
 	LISTENERS_TCP=$(count_listeners TCP)
@@ -114,10 +115,12 @@ rlJournalStart
 	rlRun "COUNT_EADDRNOTAVAIL=$(grep -w EADDRNOTAVAIL dnsmasq.strace | wc -l)"
 	rlRun "COUNT_RTM_GETADDR=$(grep -w RTM_GETADDR dnsmasq.strace | wc -l)"
 	rlRun "awk '$DNSMASQ_PID == \$3 || \$3 == \"Pid\" { print }' /proc/net/netlink" 0-255 "Show netlink info on process"
-	[ "$DEBUG" = y ] && PS1="test-debug $PS1" bash -i
+	if [ "$DEBUG" = y ] || [ "$DEBUG_FAIL" = y ] && ! rlGetTestState; then
+		PS1="test-debug $PS1" bash -i
+	fi
     rlPhaseEnd
 
-    rlPhaseStartCleanup
+    rlPhaseStartCleanup "#Cleanup $REPEAT"
 	if [ "$STRACE_LOG" = y ]; then
 		# It can be 40M big even after compression. Omit unless requested
 		rlRun "gzip dnsmasq.strace"

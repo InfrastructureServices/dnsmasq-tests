@@ -56,11 +56,11 @@ class BytesHelper(object):
             raise TypeError("Invalid variable type used: "+var.type.name)
 
     def get_family_string(self, var):
-        af = self.get_family(var)
-        for f in socket.AddressFamily:
-            if af == f:
-                return f.name
-        return str(af)
+        af = int(self.get_family(var))
+        try:
+            return socket.AddressFamily(af).name
+        except ValueError:
+            return str(af)
 
     def string_sockaddr_any(self, var):
         family = self.get_family(var)

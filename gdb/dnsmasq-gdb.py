@@ -148,8 +148,6 @@ class PrinterSockaddr(gdb.Command):
 
     def invoke(self, arg, from_tty):
         var = gdb.parse_and_eval(arg)
-        #print(var)
-        print(self.helper.get_family(var))
         print(self.helper.string_sockaddr_any(var))
 
 # gdb.ValuePrinter base in newer versions
